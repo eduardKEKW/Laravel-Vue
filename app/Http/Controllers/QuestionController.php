@@ -19,8 +19,11 @@ class QuestionController extends Controller
     }
 
 
-    public function index (Request $req)
+    public function index (Request $request)
     {
+
+        return Question::withCount('answears')->get();
+
         return QuestionResource::collection(Question::all());
     }
 
@@ -30,7 +33,7 @@ class QuestionController extends Controller
         $user_id = $request->user()->id;
 
         Answear::updateOrCreate(
-            [ 'user_id' => $user_id ],
+            [ 'user_id'     => $user_id ],
             [ 'question_id' => $question->id ]
         );
 

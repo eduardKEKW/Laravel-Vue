@@ -13,6 +13,8 @@ class SignInController extends Controller
             return response(null, 401);
         }
 
-        return response()->json(compact('token'));
+        $user = $request->user()->load('vote');
+
+        return response()->json(compact('token', 'user'));
     }
 }

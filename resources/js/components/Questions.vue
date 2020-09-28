@@ -14,6 +14,7 @@
 </template>
 
 <script>
+    //v-bind:voted="user && user.vote && user.vote.question_id"
     import Question from './Question';
     import axios from 'axios';
 

@@ -14,19 +14,18 @@ class QuestionController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['only' => ['create']]);
+        $this->middleware('auth:api', ['only' => ['create', 'store', 'update', 'destroy']]);
     }
 
     /**
      * Get a list of all questions.
      *
-     * @return \Illuminate\Http\Response
+     * @return QuestionResource
      */
     public function index()
     {
         return QuestionResource::collection(Question::all());
-
-        return Question::withCount('answears')->get();
+        // return Question::withCount('answears')->get();
 
     }
 
@@ -117,6 +116,7 @@ class QuestionController extends Controller
             return response(null, 401);
         }
 
+        // the assoc options will be deleted with the sql constrained
         $success = $question->delete();
 
         return response()->json([

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\QuestionResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\QuestionStoreRequest;
+use App\Http\Requests\UpdateQuestionRequest;
 
 class QuestionController extends Controller
 {
@@ -62,47 +63,42 @@ class QuestionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  UpdateQuestionRequest  $request
+     * @param  Question $question
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateQuestionRequest $request, Question $question)
     {
-        //
+        $success = $question->update([
+            'name' => $request->get('name')
+        ]);
+
+        return response()->json([
+            'success'   => $success,
+            'question'  => $question->fresh()
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param   Request $request
+     * @param   Question $question
+     * @return  \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, Question $question)
     {
-        //
+        // make sure the question was created by the auth user
+        if (auth()->user()->id !== $question->user_id) {
+            return response(null, 401);
+        }
+
+        $success = $question->delete();
+
+        return response()->json([
+            'success' => $success,
+        ]);
     }
 }

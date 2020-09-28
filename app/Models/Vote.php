@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Vote extends Model
 {
     use HasFactory;
 
@@ -15,13 +15,7 @@ class Question extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'option_id',
         'user_id'
     ];
-
-    public function options()
-    {
-        return $this->hasMany(Option::class);
-    }
-
 }

@@ -54,8 +54,29 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    /**
+     * Gets the association with votes table.
+     *
+     * @return Vote
+     */
     public function vote ()
     {
-        return $this->hasOne(Answear::class);
+        return $this->hasOne(Vote::class);
+    }
+
+    /**
+     * Let a user vote a an option that belogs to a question.
+     *
+     * @return Vote
+     */
+    public function voteOn ($option)
+    {
+        $user_id = auth()->user()->id;
+
+        // dont let the user vote twise
+        return $option->votes()->updateOrCreate(
+            ['user_id' => $user_id],
+            ['option_id' => $option->id]
+        );
     }
 }

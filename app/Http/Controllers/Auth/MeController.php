@@ -16,7 +16,7 @@ class MeController extends Controller
     public function index (Request $request)
     {
         return response()->json([
-            'user' => $request->user()->load('vote')
+            'user' => $request->user()
         ]);
     }
 }

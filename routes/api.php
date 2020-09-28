@@ -22,6 +22,8 @@ Route::get('questions', [QuestionController::class, 'index']);
 
 Route::post('options/{option}/vote',        [OptionController::class, 'vote'])->middleware(['auth:api']);
 Route::post('options/store/{question}',     [OptionController::class, 'store'])->middleware(['auth:api']);
+Route::post('options/destroy/{option}',     [OptionController::class, 'destroy'])->middleware(['auth:api']);
+
 Route::post('questions/destroy/{question}', [QuestionController::class, 'destroy'])->middleware(['auth:api']);
 Route::post('questions/create',             [QuestionController::class, 'store'])->middleware(['auth:api']);
 

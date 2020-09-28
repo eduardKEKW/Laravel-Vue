@@ -31,6 +31,29 @@ class OptionController extends Controller
         ]);
     }
 
+    /**
+     * Delete the option.
+     *
+     * @param   Question  $question
+     * @param   Option $option
+     * @return  \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, Option $option)
+    {
+        $question = $option->question;
+
+        // make sure the question was created by the auth user
+        if (auth()->user()->id !== $question->user_id) {
+            return response(null, 401);
+        }
+
+        $success = $option->delete();
+
+        return response()->json([
+            'success' => $success,
+        ]);
+    }
+
 
     /**
      * Lets an user vote on a option that belogs to a question.

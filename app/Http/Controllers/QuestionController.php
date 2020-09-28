@@ -31,6 +31,22 @@ class QuestionController extends Controller
     }
 
     /**
+     * Get a single question and all data associated with it.
+     *
+     * @param   Request $request
+     * @param   Question $question
+     * @return  \Illuminate\Http\Response
+     */
+    public function single(Request $request, Question $question)
+    {
+
+        $question->load('');
+        return QuestionResource::collection(Question::all());
+
+        return Question::withCount('answears')->get();
+    }
+
+    /**
      * Create the question and the associated options with it.
      *
      * @param  \Illuminate\Http\Request  $request

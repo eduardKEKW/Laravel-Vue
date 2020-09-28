@@ -50,7 +50,8 @@ class OptionController extends Controller
         $success = $option->delete();
 
         return response()->json([
-            'success' => $success,
+            'success'   => $success,
+            'question'  => $question
         ]);
     }
 

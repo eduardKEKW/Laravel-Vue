@@ -39,11 +39,17 @@ class QuestionController extends Controller
      */
     public function single(Request $request, Question $question)
     {
+        // get question with options and number of votes for every option
+        $questions = $question::with([
+            'options' => function ($query) {
+                $query->select(['question_id', 'name']);
+                $query->withCount('votes');
+            },
+            'user' => function ($query) {
+                $query->select(['id', 'name']);
+        }])->get();
 
-        $question->load('');
-        return QuestionResource::collection(Question::all());
-
-        return Question::withCount('answears')->get();
+        return response()->json($questions);
     }
 
     /**

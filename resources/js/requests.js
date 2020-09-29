@@ -33,9 +33,13 @@ export default {
         this.getToken();
         return axios[method](`/api/questions/single/${_id}`);
     },
-    vote({ _id, method = 'post' }) {
+    vote({ _id, method = "post" }) {
         this.getToken();
         return axios[method](`${BASE_URL}/options/${_id}/vote`);
+    },
+    create({ data, method = "post" }) {
+        this.getToken();
+        return axios[method](`${BASE_URL}/questions/create`, data);
     },
     saveToken(token) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;

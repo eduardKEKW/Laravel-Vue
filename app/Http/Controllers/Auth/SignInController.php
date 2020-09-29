@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class SignInController extends Controller
 {
+
+    /**
+     * Sign in user by email/pass and return jwt.
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
         if (!$token = auth()->attempt($request->only('email', 'password'))) {

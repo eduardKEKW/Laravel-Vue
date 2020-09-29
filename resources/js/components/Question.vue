@@ -1,9 +1,11 @@
 <template>
     <div class="container">
 
-    <div v-if="loading" class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
+        <div v-if="loading" class="loading">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
 
     <div v-else class="question">
         <div class="question_title">
@@ -21,6 +23,7 @@
                 <div v-if="userVotedOn" class="results">
                     {{option.votes_count}} / {{total}} Vote(s) ( {{ option.votes_count ? Math.round((option.votes_count / total) / Math.pow(10, -2), 2) : 0 }}% )
                 </div>
+
                 <div v-if="loadingVote === option.id" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -69,7 +72,17 @@
         padding: 1em;
         margin: .5em auto;
     }
-
+    .loading {
+        width: 100%;
+        height: 25vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .loading > .spinner-border {
+        font-size: 1rem;
+        font-weight: 900;
+    }
     .option:hover {
         background-color: rgb(38, 104, 82);
         color: white;

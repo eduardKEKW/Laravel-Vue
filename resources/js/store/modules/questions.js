@@ -1,4 +1,5 @@
 import axios from "axios";
+import { router } from "../../app";
 import requests from '../../requests';
 
 const state = {
@@ -6,7 +7,8 @@ const state = {
     loadingVote: false,
     question: null,
     total: 0,
-    userVote: null
+    userVote: null,
+    creating: false,
 };
 
 const getters = {
@@ -14,7 +16,8 @@ const getters = {
     loading: state      => state.loading,
     total: state        => state.total,
     loadingVote: state  => state.loadingVote,
-    userVotedOn: state  => state.userVote
+    userVotedOn: state  => state.userVote,
+    creating: state     => state.creating
 };
 
 const actions = {
@@ -61,6 +64,21 @@ const actions = {
                 commit("loadingVote", false);
             });
     },
+    create ({commit}, data) {
+        commit('creating', true);
+
+        requests.create({ data })
+            .then((res) => {
+                console.log(res);
+                router.push({ name: 'question', params: { id: res.data.question.id }});
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally( _ => {
+                commit("creating", false);
+            })
+    }
 };
 
 const mutations = {
@@ -81,20 +99,24 @@ const mutations = {
         );
         state.question = question;
         state.loading = false;
-        state.userVote = user_vote_on[0].option_id;
+        state.userVote = user_vote_on && user_vote_on[0] && user_vote_on[0].option_id;
     },
     vote (state, optionId) {
         if (!state.userVote) {
             state.total += 1;
         }
 
+
         const prevOpt = state.question.options.find(q => q.id === state.userVote);
         const newvOpt = state.question.options.find(q => q.id === optionId);
 
-        prevOpt.votes_count -= 1;
-        newvOpt.votes_count += 1;
+        prevOpt && (prevOpt.votes_count -= 1);
+        newvOpt && (newvOpt.votes_count += 1);
 
         state.userVote = optionId;
+    },
+    creating (state, value) {
+        state.creating = value;
     }
 };
 

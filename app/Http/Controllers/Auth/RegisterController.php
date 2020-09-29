@@ -12,6 +12,12 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
+    /**
+     * Register user.
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
 

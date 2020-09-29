@@ -31,7 +31,12 @@
             <input v-model="confirm_register" type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="confirm">
             </div>
 
-            <input class="btn btn-primary" type="submit" value="Register">
+            <!-- <input class="btn btn-primary" type="submit" value="Register"> -->
+            <button class="btn btn-primary" type="button" @click="register()">
+                <span v-if="loadingSignIn" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Register
+            </button>
+
         </form>
 
         <div class='title'>Or Login</div>
@@ -52,7 +57,11 @@
             <input v-model="password_login" type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="password">
             </div>
 
-            <input class="btn btn-primary" type="submit" value="Login">
+            <!-- <input class="btn btn-primary" type="submit" value="Login"> -->
+            <button class="btn btn-primary" type="button" @click="login()">
+                <span v-if="loadingSignIn" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Login
+            </button>
         </form>
 
     </div>
@@ -76,8 +85,7 @@
         },
         computed: mapGetters(['loadingSignIn']),
         methods: {
-            register(e) {
-                e.preventDefault();
+            register() {
                 this.$emit('register', {
                     name: this.name_register,
                     email: this.email_register,
@@ -86,8 +94,7 @@
                 });
             },
 
-            login(e) {
-                e.preventDefault();
+            login() {
                 this.$emit('login', {
                     email: this.email_login,
                     password: this.password_login,

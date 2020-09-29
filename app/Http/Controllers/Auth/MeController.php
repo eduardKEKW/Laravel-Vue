@@ -12,7 +12,12 @@ class MeController extends Controller
         $this->middleware(['auth:api']);
     }
 
-
+    /**
+     * Get the current loggedin user info.
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function index (Request $request)
     {
         return response()->json([

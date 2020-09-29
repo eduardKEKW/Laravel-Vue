@@ -14,7 +14,11 @@
             <h2 class="title">Create one</h2>
 
             <div class="content">
+
+            <router-link :to="{ name: 'create' }" class="route">
                 <button type="button" class="btn btn-dark">Create</button>
+            </router-link>
+
             </div>
         </div>
     </div>

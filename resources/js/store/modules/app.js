@@ -1,6 +1,5 @@
 import requests from "../../requests";
-import {router} from '../../app';
-const BASE_URL_AUTH = "/api/auth";
+import { router } from '../../app';
 
 const state = {
     user: null,

@@ -30,6 +30,7 @@ const actions = {
         requests.register({ method: 'post', data: data })
             .then(response => {
                 commit("logInUser", response.data);
+                router.push("home");
             })
             .catch(error => {
                 commit("error", error);
@@ -45,6 +46,7 @@ const actions = {
         requests.login({ method: 'post', data })
             .then(response => {
                 commit("logInUser", response.data);
+                router.push("home");
             })
             .catch(error => {
                 commit("error", error);
@@ -100,7 +102,6 @@ const mutations = {
         if (token) {
             saveToken(token);
         }
-        router.push("home");
     },
     error: (state, error) => {
         console.log(error);

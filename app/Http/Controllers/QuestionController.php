@@ -133,6 +133,7 @@ class QuestionController extends Controller
         }
 
         // the assoc options will be deleted with the sql constrained
+        // and also the votes
         $success = $question->delete();
 
         return response()->json([

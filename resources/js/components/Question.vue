@@ -10,6 +10,9 @@
     <div v-else class="question">
         <div class="question_title">
             {{ question.name }}
+            <div v-if="canUpdate" class="delete_question" title="Delete the question?" @click="delQuestion()">
+                <IconDelete></IconDelete>
+            </div>
         </div>
 
         <div class="options">
@@ -27,7 +30,6 @@
                 <div v-if="loadingVote === option.id" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-
             </div>
 
         </div>
@@ -38,24 +40,39 @@
 
 <script>
     import { mapActions, mapGetters } from "vuex";
+    import IconDelete from './DeleteIcon';
 
     export default {
         name: 'Question',
         props: [],
-        computed: mapGetters('questions', ['question', 'loading', 'total', 'loadingVote', 'userVotedOn']),
-        components: {},
+        computed: {
+            ...mapGetters('questions', ['question', 'loading', 'total', 'loadingVote', 'userVotedOn']),
+            ...mapGetters(['user', 'loggedIn'])
+        },
+        components: {IconDelete},
         mounted() {
-            this.getQuestion(this.$route.params.id);
+            this.getMe();
+            this.getQuestion(this.$route.params.id)
+                .finally((res) => {
+                    this.canUpdate = (this.user && this.user.id) === this.question.user.id;
+                });
         },
         data() {
             return {
-                // loadingOption: false,
+                canUpdate: false
             }
         },
         methods: {
-            ...mapActions('questions', ['getQuestion', 'vote']),
+            ...mapActions('questions', ['getQuestion', 'vote', 'destroy']),
+            ...mapActions(['getMe']),
             voteOn (_id) {
                 this.vote(_id);
+            },
+            delQuestion() {
+                this.destroy(this.question.id);
+            },
+            delOption(_id) {
+
             }
         },
     }
@@ -71,6 +88,7 @@
         width: 40%;
         padding: 1em;
         margin: .5em auto;
+        position: relative;
     }
     .loading {
         width: 100%;
@@ -82,6 +100,11 @@
     .loading > .spinner-border {
         font-size: 1rem;
         font-weight: 900;
+    }
+    .delete_option {
+        position: absolute;
+        top: 0%;
+        left: 110%;
     }
     .option:hover {
         background-color: rgb(38, 104, 82);
@@ -114,5 +137,13 @@
         font-size: .3rem;
         height: 5em;
         width: 5em;
+    }
+    .delete_question:hover {
+        color: red;
+        cursor: pointer;
+    }
+    .delete_question {
+        margin-left: 1em;
+        display: inline-block;
     }
 </style>

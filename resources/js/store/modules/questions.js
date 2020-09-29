@@ -36,13 +36,14 @@ const actions = {
     getQuestion({ commit }, _id) {
         commit("loading", true);
 
-        requests.getQuestion({ _id })
+        return requests.getQuestion({ _id })
             .then(response => {
                 console.log(response.data);
                 commit("setQuestion", response.data);
             })
             .catch(error => {
                 console.error(error);
+                router.push({name: 'home'});
             })
             .finally(() => {
                 commit('loading', false);
@@ -78,6 +79,14 @@ const actions = {
             .finally( _ => {
                 commit("creating", false);
             })
+    },
+    destroy({ commit }, _id) {
+        requests
+            .deleteQuestion({ _id })
+            .then((res) => {
+                router.push({name: 'home'});
+            })
+            .catch(err => console.error(err));
     }
 };
 

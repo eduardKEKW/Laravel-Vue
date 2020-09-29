@@ -37,6 +37,10 @@ export default {
         this.getToken();
         return axios[method](`${BASE_URL}/options/${_id}/vote`);
     },
+    deleteQuestion({ _id, method = 'post' }) {
+        this.getToken();
+        return axios[method](`${BASE_URL}/questions/destroy/${_id}`);
+    },
     create({ data, method = "post" }) {
         this.getToken();
         return axios[method](`${BASE_URL}/questions/create`, data);

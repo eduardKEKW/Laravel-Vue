@@ -1,21 +1,19 @@
 <template>
     <div class="container">
         <Register v-show="!loggedIn" v-on:register="register" v-on:login="login"></Register>
-        <Questions v-show="loggedIn" ></Questions>
+        <!-- <Options v-show="loggedIn" ></Options> -->
     </div>
 </template>
 
 <script>
     import { mapGetters, mapActions } from "vuex";
     import Register from './Register';
-    import Questions from './Questions';
-    import axios from 'axios';
+    // import Options from './Options';
 
     export default {
         name: 'Vote',
         components: {
             Register,
-            Questions
         },
         computed: mapGetters(['user', 'loggedIn', 'errors']),
         mounted() {
@@ -24,7 +22,6 @@
         data() {
             return { }
         },
-
         methods: {
             ...mapActions(['register', 'login', 'getMe']),
         }

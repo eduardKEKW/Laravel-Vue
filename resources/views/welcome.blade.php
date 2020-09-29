@@ -21,8 +21,11 @@
 </head>
 
 <body>
+    <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script> -->
+
     <div id="app">
-        <Vote></Vote>
+        <router-view></router-view>
     </div>
 
     <script src="{{ asset('js/app.js') }}"></script>

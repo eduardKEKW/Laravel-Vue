@@ -1,82 +1,90 @@
 <template>
     <div class="container">
-        <div class="option">Please Select One</div>
-         <div v-bind:key="question.id" v-for="question in questions">
-            <Question
-                v-bind:voted="voted === question.id"
-                v-bind:total="total"
-                v-bind:showResults="showResults"
-                v-bind:data="question"
-                v-on:select="select"
-                v-bind:loading="question.id === loading" />
+        <div v-for="question in questions" v-bind:key="question.id" class="question" >
+            <router-link :to="{ name: 'question', params: { id: question.id }}" class="route">
+                <div>{{ question.name }}</div>
+                <div class="asked">Asked by {{ question.user.name }}</div>
+            </router-link>
+        </div>
+
+        <div class="loading" v-if="loading">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    //v-bind:voted="user && user.vote && user.vote.question_id"
-    import Question from './Question';
-    import axios from 'axios';
+    import { mapActions, mapGetters } from "vuex";
 
     export default {
         name: 'Questions',
-        components: {Question},
-        props: ['voted'],
+        props: [],
+        computed: mapGetters(['showResults', 'voted', 'total', 'questions']),
+        components: {},
         mounted() {
-            this.getQuestion()
+            this.loading = true;
+            this.getQuestions()
+                .finally(() => {
+                    this.loading = false;
+                    console.log(this.questions);
+                });
         },
-
         data() {
             return {
-                questions: [],
-                loading: -1,
-                showResults: false,
-                total: 0,
+                loading: false,
             }
         },
-
         methods: {
-            select (_id) {
-                this.loading = _id;
-
-                axios.post(`/api/questions/${_id}/vote`)
-                    .then((response) => {
-                        this.showResults = true;
-                        this.loading = -1;
-                        this.voted = _id;
-                        this.getQuestion();
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            },
-
-            getQuestion () {
-                axios.get('/api/questions')
-                    .then((response) => {
-                        this.loading = false;
-                        this.total = response.data.reduce((acc,curr) => acc + curr.answears_count, 0);
-                        this.questions = response.data;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+            ...mapActions(['select', 'getQuestions']),
         }
     }
 </script>
 
 <style scoped>
-     .container {
-        padding-top: 10%;
-        width: 30%;
-        margin: 0 auto;
+    .container {
+        margin-top: 2em;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
     }
-    .option {
+    .loading {
         width: 100%;
-        font-size: 2rem;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .question {
+        margin-top: .5em;
+        height: 3em;
+        width: 100%;
+        padding: .5em;
+        font-weight: 500;
+        color: white;
+        background-color: rgb(44, 44, 44);
+        cursor: pointer;
+        transition: background-color .2s ease-in-out;
+    }
+
+    .question:hover {
+        background-color: rgb(70, 69, 69);
+    }
+    .asked {
         font-weight: 600;
-        margin-bottom: 2em;
-        text-align: center;
+        font-size: .8rem;
+    }
+    .route {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        background-color: none;
     }
 </style>

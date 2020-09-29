@@ -2,7 +2,7 @@
     <div class="container">
         <div class='title'>Register</div>
 
-        <form  @submit.prevent="register">
+        <form  @submit.prevent="register($event)">
             <div class="input-group input-group-sm mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
@@ -37,7 +37,7 @@
         <div class='title'>Or Login</div>
 
 
-        <form  @submit.prevent="login">
+        <form  @submit.prevent="login($event)">
               <div class="input-group input-group-sm mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
@@ -59,11 +59,11 @@
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        },
+    import { mapActions, mapGetters } from "vuex";
 
+
+    export default {
+        mounted() {},
         data() {
             return {
                 name_register: '',
@@ -71,12 +71,13 @@
                 password_register: '',
                 confirm_register: '',
                 email_login: '',
-                password_login: ''
+                password_login: '',
             }
         },
-
+        computed: mapGetters(['loadingSignIn']),
         methods: {
-            register() {
+            register(e) {
+                e.preventDefault();
                 this.$emit('register', {
                     name: this.name_register,
                     email: this.email_register,
@@ -85,7 +86,8 @@
                 });
             },
 
-            login() {
+            login(e) {
+                e.preventDefault();
                 this.$emit('login', {
                     email: this.email_login,
                     password: this.password_login,

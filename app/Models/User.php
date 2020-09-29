@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Vote;
 use App\Models\Answear;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -71,12 +72,13 @@ class User extends Authenticatable implements JWTSubject
      */
     public function voteOn ($option)
     {
+        $question_id = $option->question_id;
         $user_id = auth()->user()->id;
 
         // dont let the user vote twise
-        return $option->votes()->updateOrCreate(
-            ['user_id' => $user_id],
-            ['option_id' => $option->id]
+        return Vote::updateOrCreate(
+            [ 'user_id' => $user_id, 'question_id' => $question_id ],
+            [ 'option_id' => $option->id ]
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vote;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Http\Resources\QuestionResource;
@@ -24,9 +25,8 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        return QuestionResource::collection(Question::all());
-        // return Question::withCount('answears')->get();
-
+        return Question::all()->load('user');
+        return QuestionResource::collection(Question::all()->load('user'));
     }
 
     /**
@@ -38,17 +38,33 @@ class QuestionController extends Controller
      */
     public function single(Request $request, Question $question)
     {
-        // get question with options and number of votes for every option
-        $questions = $question::with([
-            'options' => function ($query) {
-                $query->select(['question_id', 'name']);
-                $query->withCount('votes');
-            },
-            'user' => function ($query) {
-                $query->select(['id', 'name']);
-        }])->get();
+        $option_id = null;
 
-        return response()->json($questions);
+        // get question with options and number of votes for every option
+        $question->load(
+            [
+                'options' => function ($query) {
+                    $query->select(['question_id', 'name', 'id']);
+                    $query->withCount('votes');
+                },
+                'user' => function ($query) {
+                    $query->select(['id', 'name']);
+                },
+            ]
+        )->get();
+
+        // if the user has already voted on this question
+        if (auth()->user()) {
+            $option_id = Vote::where([
+                'question_id' => $question->id,
+                'user_id'     => auth()->user()->id
+            ])->get('option_id');
+        }
+
+        return response()->json([
+            'question'      => $question,
+            'user_vote_on'  => $option_id,
+        ]);
     }
 
     /**
